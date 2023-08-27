@@ -1,5 +1,25 @@
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
+pipeline {
+    agent {
+        docker {
+            image 'openjdk:11-jre-slim'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'javac src/Main.java'
+            }
+        }
+        stage('Run') {
+            steps {
+                sh 'java -cp src Main'
+            }
+        }
     }
 }
